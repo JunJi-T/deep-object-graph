@@ -1,5 +1,7 @@
 # Deep Object Graph
 
+[![Build Status](https://travis-ci.org/JunJi-T/deep-object-graph.svg?branch=master)](https://travis-ci.org/JunJi-T/deep-object-graph)
+
 An alternative to [treeize](https://github.com/kwhitley/treeize).
 
 Converts flat JSON `objects` into deep object graph. 
