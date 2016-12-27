@@ -1,6 +1,6 @@
 {
   "name": "deep-object-graph",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Deep object graph",
   "main": "./dist/DeepObjectGraph.js",
   "author": "junji <junji.tan.0@gmail.com>",
