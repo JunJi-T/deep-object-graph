@@ -1,7 +1,7 @@
 {
   "name": "deep-object-graph",
   "version": "1.0.2",
-  "description": "Deep object graph",
+  "description": "Converts flat JSON objects into deep object graph.",
   "main": "./dist/DeepObjectGraph.js",
   "author": "junji <junji.tan.0@gmail.com>",
   "homepage": "https://github.com/JunJi-T/deep-object-graph",
