@@ -1,0 +1,48 @@
+{
+  "name": "deep-object-graph",
+  "version": "0.0.1",
+  "description": "Deep object graph",
+  "main": "./dist/DeepObjectGraph.js",
+  "prepublish": "npm run build",
+  "author": "junji <junji.tan.0@gmail.com>",
+  "homepage": "https://github.com/JunJi-T/deep-object-graph",
+  "bugs": {
+    "url": "https://github.com/JunJi-T/deep-object-graph/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JunJi-T/deep-object-graph.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "babel src --presets babel-preset-es2015 -d dist",
+    "test": "ava"
+  },
+  "dependencies": {
+    "lodash": "^4.17.2"
+  },
+  "devDependencies": {
+    "ava": "^0.17.0",
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0"
+  },
+  "keywords": [
+    "sql",
+    "rows",
+    "joins",
+    "join",
+    "associative",
+    "convert",
+    "tree",
+    "CSV",
+    "SQL",
+    "JSON",
+    "flat",
+    "key",
+    "nested",
+    "object",
+    "merge",
+    "combine",
+    "delimiter"
+  ]
+}
