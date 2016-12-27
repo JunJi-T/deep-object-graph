@@ -1,9 +1,8 @@
 {
   "name": "deep-object-graph",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Deep object graph",
   "main": "./dist/DeepObjectGraph.js",
-  "prepublish": "npm run build",
   "author": "junji <junji.tan.0@gmail.com>",
   "homepage": "https://github.com/JunJi-T/deep-object-graph",
   "bugs": {
@@ -15,6 +14,7 @@
   },
   "license": "MIT",
   "scripts": {
+    "prepublish": "npm run build",
     "build": "babel src --presets babel-preset-es2015 -d dist",
     "test": "ava"
   },
