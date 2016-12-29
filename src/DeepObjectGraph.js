@@ -107,7 +107,7 @@ class DeepObjectGraph {
                 objValue.forEach((obj) => {
                     if (isPlainObject(obj)) {
                         tempArray = this._findMatchAndMerge(obj, tempArray);
-                    }           
+                    }
                 });
 
                 return tempArray;
@@ -120,7 +120,7 @@ class DeepObjectGraph {
             if (!!objValue && !!srcValue && objValue != srcValue) {
                 if (!isObject(objValue) && !isObject(srcValue)) {
                     return [srcValue, objValue];
-                } else if (Array.isArray(srcValue)) {
+                } else if (Array.isArray(srcValue) && !srcValue.includes(objValue)) {
                     srcValue.push(objValue);
                     return srcValue;
                 }
