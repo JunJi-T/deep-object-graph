@@ -151,7 +151,7 @@ var DeepObjectGraph = function () {
                 if (!!objValue && !!srcValue && objValue != srcValue) {
                     if (!(0, _lodash.isObject)(objValue) && !(0, _lodash.isObject)(srcValue)) {
                         return [srcValue, objValue];
-                    } else if (Array.isArray(srcValue)) {
+                    } else if (Array.isArray(srcValue) && !srcValue.includes(objValue)) {
                         srcValue.push(objValue);
                         return srcValue;
                     }
