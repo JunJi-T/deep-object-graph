@@ -30,7 +30,8 @@ To use.
 **Note:** Each `object` needs to have an unique field to identify them with other objects that share the same unique field for merging. By Default this field name is **'id'**, it is configurable with `options.primaryKeyField`.
 
 ```js
-const deepObjectGraph = import('deep-object-graph');
+import deepObjectGraph from 'deep-object-graph';
+// const deepObjectGraph = require('deep-object-graph').default; // es5-syntax.
 
 // Create new instance with default options shown.
 const dogInstance = new deepObjectGraph({
