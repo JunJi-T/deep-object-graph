@@ -793,3 +793,232 @@ test('Multiple Objects. Multiple parents.', async t => {
     const formattedData = dogInstance.convert(data);
     t.deepEqual(formattedData, expectedData);
 });
+
+test('complex nested 1', async t => {
+    let thisDogInstance = new DeepObjectGraph();
+
+    const data = [{
+        "id": 3,
+        "common": "common-field",
+        "arrayMergableField": [],
+        "singleValueMergableField": "hotel",
+        "objectMergableCommonParent": {
+        "id": 3,
+        "singleValueMergableField": "november"
+        },
+        "objectMergableCommonParentNested": {
+        "id": 1,
+        "nestedObject": {
+            "id": 2,
+            "common-nested": "common-nested-field",
+            "arrayMergableField": [
+            "bravo"
+            ]
+        }
+        }
+    }, {
+        "id": 1,
+        "common": "common-field",
+        "arrayMergableField": [
+        "delta",
+        "charlie"
+        ],
+        "singleValueMergableField": "golf",
+        "objectMergableCommonParent": {
+        "id": 3,
+        "singleValueMergableField": "lima"
+        },
+        "objectMergableCommonParentNested": {
+        "id": 1,
+        "nestedObject": {
+            "id": 2,
+            "common-nested": "common-nested-field",
+            "arrayMergableField": [
+            "charlie",
+            "bravo"
+            ]
+        }
+        }
+    }, {
+        "id": 3,
+        "common": "common-field",
+        "arrayMergableField": [],
+        "singleValueMergableField": "golf",
+        "objectMergableCommonParent": {
+        "id": 4,
+        "singleValueMergableField": "november"
+        },
+        "objectMergableCommonParentNested": {
+        "id": 2,
+        "nestedObject": {
+            "id": 2,
+            "common-nested": "common-nested-field",
+            "arrayMergableField": [
+            "bravo",
+            "delta"
+            ]
+        }
+        }
+    }, {
+        "id": 1,
+        "common": "common-field",
+        "arrayMergableField": [
+        "bravo",
+        "delta"
+        ],
+        "singleValueMergableField": "foxtrot",
+        "objectMergableCommonParent": {
+        "id": 3,
+        "singleValueMergableField": "lima"
+        },
+        "objectMergableCommonParentNested": {
+        "id": 2,
+        "nestedObject": {
+            "id": 2,
+            "common-nested": "common-nested-field",
+            "arrayMergableField": [
+            "echo",
+            "alpha"
+            ]
+        }
+        }
+    }, {
+        "id": 3,
+        "common": "common-field",
+        "arrayMergableField": [
+        "bravo",
+        "alpha"
+        ],
+        "singleValueMergableField": "golf",
+        "objectMergableCommonParent": {
+        "id": 3,
+        "singleValueMergableField": "lima"
+        },
+        "objectMergableCommonParentNested": {
+        "id": 2,
+        "nestedObject": {
+            "id": 2,
+            "common-nested": "common-nested-field",
+            "arrayMergableField": []
+        }
+        }
+    }, {
+        "id": 1,
+        "common": "common-field",
+        "arrayMergableField": [],
+        "singleValueMergableField": "hotel",
+        "objectMergableCommonParent": {
+        "id": 2,
+        "singleValueMergableField": "kilo"
+        },
+        "objectMergableCommonParentNested": {
+        "id": 1,
+        "nestedObject": {
+            "id": 2,
+            "common-nested": "common-nested-field",
+            "arrayMergableField": [
+            "bravo"
+            ]
+        }
+        }
+    }];
+
+    const expectedData = [{
+        "id": 3,
+        "common": "common-field",
+        "arrayMergableField": [
+        "bravo",
+        "alpha"
+        ],
+        "singleValueMergableField": [
+        "hotel",
+        "golf"
+        ],
+        "objectMergableCommonParent": [
+        {
+            "id": 3,
+            "singleValueMergableField": [
+            "november",
+            "lima"
+            ]
+        },
+        {
+            "id": 4,
+            "singleValueMergableField": "november"
+        }
+        ],
+        "objectMergableCommonParentNested": [
+        {
+            "id": 1,
+            "nestedObject": {
+            "id": 2,
+            "common-nested": "common-nested-field",
+            "arrayMergableField": [
+                "bravo"
+            ]
+            }
+        },
+        {
+            "id": 2,
+            "nestedObject": {
+            "id": 2,
+            "common-nested": "common-nested-field",
+            "arrayMergableField": [
+                "bravo",
+                "delta"
+            ]
+            }
+        }
+        ]
+    }, {
+        "id": 1,
+        "common": "common-field",
+        "arrayMergableField": [
+        "delta",
+        "charlie",
+        "bravo"
+        ],
+        "singleValueMergableField": [
+        "golf",
+        "foxtrot",
+        "hotel"
+        ],
+        "objectMergableCommonParent": [
+        {
+            "id": 3,
+            "singleValueMergableField": "lima"
+        },
+        {
+            "id": 2,
+            "singleValueMergableField": "kilo"
+        }
+        ],
+        "objectMergableCommonParentNested": [
+        {
+            "id": 1,
+            "nestedObject": {
+            "id": 2,
+            "common-nested": "common-nested-field",
+            "arrayMergableField": [
+                "charlie",
+                "bravo"
+            ]
+            }
+        },
+        {
+            "id": 2,
+            "nestedObject": {
+            "id": 2,
+            "common-nested": "common-nested-field",
+            "arrayMergableField": [
+                "echo",
+                "alpha"
+            ]
+            }
+        }
+        ]
+    }];
+
+    const formattedData = thisDogInstance.convert(data);
+    t.deepEqual(formattedData, expectedData);
+});

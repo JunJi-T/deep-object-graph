@@ -133,6 +133,10 @@ var DeepObjectGraph = function () {
                         objValue.forEach(function (obj) {
                             if ((0, _lodash.isPlainObject)(obj)) {
                                 tempArray = _this3._findMatchAndMerge(obj, tempArray);
+                            } else {
+                                if (!tempArray.includes(obj)) {
+                                    tempArray.push(obj);
+                                }
                             }
                         });
 

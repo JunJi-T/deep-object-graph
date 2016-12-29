@@ -107,6 +107,10 @@ class DeepObjectGraph {
                 objValue.forEach((obj) => {
                     if (isPlainObject(obj)) {
                         tempArray = this._findMatchAndMerge(obj, tempArray);
+                    } else {
+                        if (!tempArray.includes(obj)) {
+                            tempArray.push(obj);
+                        }
                     }
                 });
 
