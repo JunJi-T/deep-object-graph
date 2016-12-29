@@ -264,6 +264,32 @@ test('Convert multiple. Push to array if not plainObject', async t => {
     t.deepEqual(formattedData, expectedData);
 });
 
+test('Convert multiple. Push to array if not plainObject. Removes duplicates', async t => {
+    const data = [{
+        "id": "1",
+        "name": "Cat",
+        "metaData": 'valueA'
+    },{
+        "id": "1",
+        "name": "Cat",
+        "metaData": 'valueB'
+    },
+    {
+        "id": "1",
+        "name": "Cat",
+        "metaData": 'valueB'
+    }];
+
+    const expectedData = [{
+        "id": "1",
+        "name": "Cat",
+        "metaData": ['valueA', 'valueB']
+    }]
+
+    const formattedData = dogInstance.convert(data);
+    t.deepEqual(formattedData, expectedData);
+});
+
 test('Convert multiple. Push to array if not plainObject 2', async t => {
     const data = [{
         "id": "1",
