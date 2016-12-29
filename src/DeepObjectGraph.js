@@ -1,6 +1,6 @@
 'use strict';
 
-import { set, has, merge, pick, mergeWith, isObject, isPlainObject } from 'lodash';
+import { set, has, merge, pick, uniq, remove, mergeWith, isObject, isPlainObject } from 'lodash';
 
 /**
  * 
@@ -40,11 +40,25 @@ class DeepObjectGraph {
         data = data.map(obj => this._convertDelimitedKeysToObjects(obj));
 
         let merged = [];
-
+        
         while (data.length > 0) {
-            let currentObj = data.shift();
+            let currentObj = data[0];
             
-            merged = this._findMatchAndMerge(currentObj, merged);
+            // First parent level Optimization. (find and process all by similar ID at outer most level)
+            let arrayOfSimilarParentObjects = remove(data, (obj) => {
+                return obj[this.options.primaryKeyField] === currentObj[this.options.primaryKeyField];
+            });
+            
+            let preMerge = [];
+            arrayOfSimilarParentObjects.forEach((obj) => {
+                preMerge = this._findMatchAndMerge(obj, preMerge);
+            });
+            
+            merged = merged.concat(preMerge);
+
+            // Previously non optimized code.
+            // let currentObj = data.shift();
+            // merged = this._findMatchAndMerge(currentObj, merged);
         }
 
         return merged;
@@ -73,7 +87,6 @@ class DeepObjectGraph {
         if (Array.isArray(arrayOrObject)) {
             // Match objects by distinct `id` field. 
             let matchObj = arrayOrObject.find((obj) => {
-                // Check for keys mismatch.
                 if (!!obj[this.options.primaryKeyField]) {
                     return obj[this.options.primaryKeyField] === object[this.options.primaryKeyField];
                 }
@@ -92,7 +105,6 @@ class DeepObjectGraph {
     }
 
     _customMerge(currentObj, sourceObj) {
-
         return mergeWith(currentObj, sourceObj, (objValue, srcValue, key) => {
             // Put special keys (usually a table name) automatically in array form.
             if (this.options.specialKeyArray.includes(key) && isPlainObject(srcValue) && !objValue) {
@@ -121,9 +133,9 @@ class DeepObjectGraph {
             if (!!objValue && !!srcValue && objValue != srcValue) {
                 if (!isObject(objValue) && !isObject(srcValue)) {
                     return [srcValue, objValue];
-                } else if (Array.isArray(srcValue) && !srcValue.includes(objValue)) {
+                } else if (Array.isArray(srcValue)) {
                     srcValue.push(objValue);
-                    return srcValue;
+                    return uniq(srcValue);
                 }
             }
         });

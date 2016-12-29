@@ -4,8 +4,6 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _lodash = require('lodash');
@@ -59,10 +57,28 @@ var DeepObjectGraph = function () {
 
             var merged = [];
 
-            while (data.length > 0) {
-                var currentObj = data.shift();
+            var _loop = function _loop() {
+                var currentObj = data[0];
 
-                merged = this._findMatchAndMerge(currentObj, merged);
+                // First parent level Optimization. (find and process all by similar ID at outer most level)
+                var arrayOfSimilarParentObjects = (0, _lodash.remove)(data, function (obj) {
+                    return obj[_this.options.primaryKeyField] === currentObj[_this.options.primaryKeyField];
+                });
+
+                var preMerge = [];
+                arrayOfSimilarParentObjects.forEach(function (obj) {
+                    preMerge = _this._findMatchAndMerge(obj, preMerge);
+                });
+
+                merged = merged.concat(preMerge);
+
+                // Previously non optimized code.
+                // let currentObj = data.shift();
+                // merged = this._findMatchAndMerge(currentObj, merged);
+            };
+
+            while (data.length > 0) {
+                _loop();
             }
 
             return merged;
@@ -95,7 +111,6 @@ var DeepObjectGraph = function () {
             if (Array.isArray(arrayOrObject)) {
                 // Match objects by distinct `id` field. 
                 var matchObj = arrayOrObject.find(function (obj) {
-                    // Check for keys mismatch.
                     if (!!obj[_this2.options.primaryKeyField]) {
                         return obj[_this2.options.primaryKeyField] === object[_this2.options.primaryKeyField];
                     }
@@ -117,35 +132,25 @@ var DeepObjectGraph = function () {
         value: function _customMerge(currentObj, sourceObj) {
             var _this3 = this;
 
-            var mergedObject = {};
-
-            mergedObject = (0, _lodash.mergeWith)(currentObj, sourceObj, function (objValue, srcValue, key) {
+            return (0, _lodash.mergeWith)(currentObj, sourceObj, function (objValue, srcValue, key) {
                 // Put special keys (usually a table name) automatically in array form.
                 if (_this3.options.specialKeyArray.includes(key) && (0, _lodash.isPlainObject)(srcValue) && !objValue) {
                     return [srcValue];
                 }
 
                 if (Array.isArray(objValue) && Array.isArray(srcValue)) {
-                    var _ret = function () {
-                        // Both incoming values are array, manually merge each one from current to src.
-                        var tempArray = srcValue;
-
-                        objValue.forEach(function (obj) {
-                            if ((0, _lodash.isPlainObject)(obj)) {
-                                tempArray = _this3._findMatchAndMerge(obj, tempArray);
-                            } else {
-                                if (!tempArray.includes(obj)) {
-                                    tempArray.push(obj);
-                                }
+                    // Both incoming values are array, manually merge each one from current to src.
+                    objValue.forEach(function (obj) {
+                        if ((0, _lodash.isPlainObject)(obj)) {
+                            srcValue = _this3._findMatchAndMerge(obj, srcValue);
+                        } else {
+                            if (!srcValue.includes(obj)) {
+                                srcValue.push(obj);
                             }
-                        });
+                        }
+                    });
 
-                        return {
-                            v: tempArray
-                        };
-                    }();
-
-                    if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+                    return srcValue;
                 }
 
                 if ((0, _lodash.isPlainObject)(objValue)) {
@@ -155,14 +160,12 @@ var DeepObjectGraph = function () {
                 if (!!objValue && !!srcValue && objValue != srcValue) {
                     if (!(0, _lodash.isObject)(objValue) && !(0, _lodash.isObject)(srcValue)) {
                         return [srcValue, objValue];
-                    } else if (Array.isArray(srcValue) && !srcValue.includes(objValue)) {
+                    } else if (Array.isArray(srcValue)) {
                         srcValue.push(objValue);
-                        return srcValue;
+                        return (0, _lodash.uniq)(srcValue);
                     }
                 }
             });
-
-            return mergedObject;
         }
     }, {
         key: '_convertDelimitedKeysToObjects',
