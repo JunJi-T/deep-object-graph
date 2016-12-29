@@ -92,9 +92,8 @@ class DeepObjectGraph {
     }
 
     _customMerge(currentObj, sourceObj) {
-        let mergedObject = {};
 
-        mergedObject = mergeWith(currentObj, sourceObj, (objValue, srcValue, key) => {
+        return mergeWith(currentObj, sourceObj, (objValue, srcValue, key) => {
             // Put special keys (usually a table name) automatically in array form.
             if (this.options.specialKeyArray.includes(key) && isPlainObject(srcValue) && !objValue) {
                 return [srcValue];
@@ -102,19 +101,17 @@ class DeepObjectGraph {
             
             if (Array.isArray(objValue) && Array.isArray(srcValue)) {
                 // Both incoming values are array, manually merge each one from current to src.
-                let tempArray = srcValue;
-
                 objValue.forEach((obj) => {
                     if (isPlainObject(obj)) {
-                        tempArray = this._findMatchAndMerge(obj, tempArray);
+                        srcValue = this._findMatchAndMerge(obj, srcValue);
                     } else {
-                        if (!tempArray.includes(obj)) {
-                            tempArray.push(obj);
+                        if (!srcValue.includes(obj)) {
+                            srcValue.push(obj);
                         }
                     }
                 });
 
-                return tempArray;
+                return srcValue;
             }
 
             if (isPlainObject(objValue)) {  
@@ -130,8 +127,6 @@ class DeepObjectGraph {
                 }
             }
         });
-        
-        return mergedObject;
     }
 
     _convertDelimitedKeysToObjects(data) {
